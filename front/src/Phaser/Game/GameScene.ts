@@ -154,6 +154,7 @@ export class GameScene extends ResizableScene implements CenterListener {
     private outlinedItem: ActionableItem|null = null;
     private userInputManager!: UserInputManager;
     private isReconnecting: boolean = false;
+    private isPaused: boolean = false;
     private startLayerName!: string | null;
     private openChatIcon!: OpenChatIcon;
     private playerName!: string;
@@ -411,6 +412,21 @@ export class GameScene extends ResizableScene implements CenterListener {
         // FIXME: change this to use the UserInputManager class for input
         this.input.keyboard.on('keyup-M', () => {
             this.switchLayoutMode();
+        });
+
+        // FIXME: change this to use the UserInputManager class for input
+        this.input.keyboard.on('keyup-P', () => {
+            // Try to pause the game
+            if (!this.isPaused) {
+                console.warn('Game paused for 5 seconds');
+                setTimeout(() => {
+                    console.log('Game continued');
+                    this.scene.launch(ReconnectingSceneName);
+                    this.isPaused = false;
+                }, 5000);
+                this.scene.sleep();
+                this.isPaused = true;                
+            }
         });
 
         this.reposition();
